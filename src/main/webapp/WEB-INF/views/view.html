@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="article">
+    <h3>Article details</h3>
+    <p><a th:href="@{/blogs}">Back to list</a></p>
+    <h2 th:text="${blog.title}"></h2>
+    <p>Published date: <span th:text="${blog.publishedDate}"></span></p>
+    <p>Author: <span th:text="${blog.author}"></span></p>
+    <div th:text="${blog.content}" class="content"></div>
+</div>
+
+<footer th:insert="/layout :: footer"></footer>
+</body>
+</html>
