@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String title;
 
@@ -23,29 +23,19 @@ public class Blog {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public Blog() {
     }
 
-    public Blog(String title, LocalDate publishedDate, String author, String content) {
-        this.title = title;
-        this.publishedDate = publishedDate;
-        this.author = author;
-        this.content = content;
-    }
 
-    public Blog(int id, String title, LocalDate publishedDate, String author, String content) {
-        this.id = id;
-        this.title = title;
-        this.publishedDate = publishedDate;
-        this.author = author;
-        this.content = content;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,5 +69,13 @@ public class Blog {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

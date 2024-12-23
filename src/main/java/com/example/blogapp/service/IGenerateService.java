@@ -1,13 +1,18 @@
 package com.example.blogapp.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 public interface IGenerateService<T> {
-    List<T> findAll();
+    Iterable<T> findAll();
 
-    T findById(int id);
+    Page<T> findAll(Pageable pageable);
+
+    Optional<T> findById(Long id);
 
     void save(T object);
 
-    void delete(int id);
+    void delete(Long id);
 }

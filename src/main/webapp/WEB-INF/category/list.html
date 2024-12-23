@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>Category List</h3>
+<p>
+    <a th:href="@{/blogs}">
+        Blogs
+    </a>
+</p>
+<p>
+    <a th:href="@{/categories/create}">
+        Add new category
+    </a>
+</p>
+<div class="notify">
+    <div th:if="${message}" style="margin-bottom: 5px;">
+        <span th:text="${message}"></span>
+    </div>
+</div>
+<table id="list">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c, pStatus:${categories}" th:class="${pStatus.odd}?'odd':'even'">
+        <td th:text="${pStatus.count}"></td>
+        <td>
+            <a th:href="@{/categories/{id}/view(id=${c.id})}" th:text="${c.name}"></a>
+        </td>
+        <td>
+            <a th:href="@{/categories/{id}/edit(id=${c.id})}">Edit</a>
+        </td>
+        <td>
+            <a th:href="@{/categories/{id}/delete(id=${c.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<footer th:insert="/layout :: footer"></footer>
+</body>
+</html>

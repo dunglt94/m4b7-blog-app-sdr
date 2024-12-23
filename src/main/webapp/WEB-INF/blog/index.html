@@ -6,28 +6,34 @@
 </head>
 <body>
 <h3>Blog List</h3>
-<form th:action="@{/blogs/search}" method="get">
+<form th:action="@{/blogs}" method="get">
     <div>
-        <label><input type="search" id="search" name="title" placeholder="Enter blogs title" required></label>
+        <label><input type="search" id="search" name="search" placeholder="Enter blogs title" required></label>
         <button type="submit">Search</button>
     </div>
 </form>
+<p>
+    <a th:href="@{/categories}">
+        Category List
+    </a>
+</p>
 <p>
     <a th:href="@{/blogs/create}">
         Add new blog
     </a>
 </p>
 <div class="notify">
-    <div th:if="${success}" style="margin-bottom: 5px;">
-        <span th:text="${success}"></span>
+    <div th:if="${message}" style="margin-bottom: 5px;">
+        <span th:text="${message}"></span>
     </div>
 </div>
-<table id="blogs">
+<table id="list">
     <thead>
     <tr>
         <th>STT</th>
         <th>Title</th>
         <th>Content</th>
+        <th>Category</th>
         <th>Published Date</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -40,8 +46,8 @@
             <a th:href="@{/blogs/{id}/view(id=${blog.id})}" th:text="${blog.title}"></a>
         </td>
         <td th:text="${blog.content}" id="content"></td>
+        <td th:text="${blog.getCategory().name}"></td>
         <td th:text="${#temporals.format(blog.publishedDate, 'dd/MM/yyyy')}"></td>
-
         <td>
             <a th:href="@{/blogs/{id}/edit(id=${blog.id})}">Edit</a>
         </td>
@@ -51,6 +57,13 @@
     </tr>
     </tbody>
 </table>
+<div style="text-align: center">
+    <a class="btn btn-primary" th:if="${blogs.hasPrevious()}"
+       th:href="@{/blogs(page=${blogs.number - 1})}">Previous</a>
+    <span th:text="${blogs.number + 1}"></span> | <span th:text="${blogs.totalPages}"></span>
+    <a class="btn btn-primary" th:if="${blogs.hasNext()}"
+       th:href="@{/blogs(page=${blogs.number + 1})}">Next</a>
+</div>
 <footer th:insert="/layout :: footer"></footer>
 </body>
 </html>

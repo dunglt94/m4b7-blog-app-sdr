@@ -1,11 +1,14 @@
 package com.example.blogapp.service;
 
 import com.example.blogapp.model.Blog;
+import com.example.blogapp.model.Category;
 import com.example.blogapp.repository.IBlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BlogService implements IBlogService {
@@ -13,12 +16,17 @@ public class BlogService implements IBlogService {
     private IBlogRepository blogRepository;
 
     @Override
-    public List<Blog> findAll() {
+    public Iterable<Blog> findAll() {
         return blogRepository.findAll();
     }
 
     @Override
-    public Blog findById(int id) {
+    public Page<Blog> findAll(Pageable pageable) {
+        return blogRepository.findAll(pageable);
+    }
+
+    @Override
+    public Optional<Blog> findById(Long id) {
         return blogRepository.findById(id);
     }
 
@@ -28,7 +36,17 @@ public class BlogService implements IBlogService {
     }
 
     @Override
-    public void delete(int id) {
-        blogRepository.delete(id);
+    public void delete(Long id) {
+        blogRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Blog> findAllByTitle(Pageable pageable, String name) {
+        return blogRepository.findAllByTitleContainingIgnoreCase(pageable, name);
+    }
+
+    @Override
+    public Page<Blog> findAllByCategory(Pageable pageable, Category category) {
+        return blogRepository.findAllByCategory(pageable, category);
     }
 }

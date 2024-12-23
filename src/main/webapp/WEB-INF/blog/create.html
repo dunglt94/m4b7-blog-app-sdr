@@ -28,6 +28,12 @@
             <input type="text" id="author" th:field="*{author}"/>
         </div>
         <div>
+            <label for="province">Category</label>
+            <select id="province" th:field="*{category}">
+                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+            </select>
+        </div>
+        <div>
             <label for="content">Content</label><br>
             <textarea id="content" th:field="*{content}" rows="100"></textarea>
         </div>
