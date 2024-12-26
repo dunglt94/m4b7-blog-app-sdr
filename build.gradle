@@ -32,6 +32,9 @@ dependencies {
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.15.Final'
     implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.7.18'
 
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
