@@ -4,6 +4,7 @@ import com.example.blogapp.model.Blog;
 import com.example.blogapp.service.IBlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,8 +22,9 @@ public class BlogRestController {
     private IBlogService blogService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Blog>> getBlogs() {
-        Iterable<Blog> blogs = blogService.findAll();
+    public ResponseEntity<Page<Blog>> getBlogs(
+            @PageableDefault(size = 4, sort = "publishedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Blog> blogs = blogService.findAll(pageable);
         return new ResponseEntity<>(blogs, HttpStatus.OK);
     }
 

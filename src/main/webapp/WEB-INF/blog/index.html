@@ -6,12 +6,10 @@
 </head>
 <body>
 <h3>Blog List</h3>
-<!--<form th:action="@{/blogs}" method="get">-->
-    <div>
-        <label><input type="search" id="search" name="q" placeholder="Enter blogs title" required></label>
-        <button type="button" onclick="searchBlogs()">Search</button>
-    </div>
-<!--</form>-->
+<div>
+    <label><input type="search" id="search" name="q" placeholder="Enter blogs title" required></label>
+    <button type="button" onclick="searchBlogs()">Search</button>
+</div>
 <p>
     <a th:href="@{/categories}">
         Category List
@@ -57,8 +55,9 @@
     </tr>
     </tbody>
 </table>
-<button type="button" th:if="${blogs.hasNext()}">Load More</button>
-    <!--<div style="text-align: center">-->
+<br>
+<button type="button" th:if="${blogs.hasNext()}" id="load-more" onclick="loadMore()">Load More</button>
+<!--<div style="text-align: center">-->
 <!--    <a class="btn btn-primary" th:if="${blogs.hasPrevious()}"-->
 <!--       th:href="@{/blogs(page=${blogs.number - 1})}">Previous</a>-->
 <!--    <span th:text="${blogs.number + 1}"></span> | <span th:text="${blogs.totalPages}"></span>-->
@@ -95,6 +94,39 @@
                     </tr>`;
                 }
                 $("#blogs").html(content);
+            }
+        });
+    }
+
+    let currentPage = 0;
+    let pageSize = 4;
+    function loadMore() {
+        event.preventDefault();
+        currentPage++;
+        $.ajax({
+            url: `http://localhost:8080/api/blogs?page=${currentPage}`,
+            type: "GET",
+            success: function (data) {
+                console.log("Data received:", data);
+                let blogs = data.content;
+                let content = "";
+                for (let i = 0; i < blogs.length; i++) {
+                    content += `
+                    <tr>
+                        <td>${i + 1 + currentPage * pageSize}</td>
+                        <td>
+                            <a href="/blogs/${blogs[i].id}/view">${blogs[i].title}</a>
+                        </td>
+                        <td id="content">${blogs[i].content}</td>
+                        <td>${blogs[i].category.name}</td>
+                        <td>
+                            ${blogs[i].publishedDate[2]}/${ blogs[i].publishedDate[1]}/${blogs[i].publishedDate[0]}
+                        </td>
+                        <td><button type="button" class="edit" value="${blogs[i].id}">Edit</button></td>
+                        <td><button type="button" class="delete" value="${blogs[i].id}">Delete</button></td>
+                    </tr>`;
+                }
+                $("#blogs").append(content);
             }
         });
     }
