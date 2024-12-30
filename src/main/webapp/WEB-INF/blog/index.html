@@ -6,12 +6,12 @@
 </head>
 <body>
 <h3>Blog List</h3>
-<form th:action="@{/blogs}" method="get">
+<!--<form th:action="@{/blogs}" method="get">-->
     <div>
-        <label><input type="search" id="search" name="search" placeholder="Enter blogs title" required></label>
-        <button type="submit">Search</button>
+        <label><input type="search" id="search" name="q" placeholder="Enter blogs title" required></label>
+        <button type="button" onclick="searchBlogs()">Search</button>
     </div>
-</form>
+<!--</form>-->
 <p>
     <a th:href="@{/categories}">
         Category List
@@ -39,7 +39,7 @@
         <th>Delete</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="blogs">
     <tr th:each="blog, stat:${blogs}" th:class="${stat.odd}?'odd':'even'">
         <td th:text="${stat.count}"></td>
         <td>
@@ -57,13 +57,47 @@
     </tr>
     </tbody>
 </table>
-<div style="text-align: center">
-    <a class="btn btn-primary" th:if="${blogs.hasPrevious()}"
-       th:href="@{/blogs(page=${blogs.number - 1})}">Previous</a>
-    <span th:text="${blogs.number + 1}"></span> | <span th:text="${blogs.totalPages}"></span>
-    <a class="btn btn-primary" th:if="${blogs.hasNext()}"
-       th:href="@{/blogs(page=${blogs.number + 1})}">Next</a>
-</div>
+<button type="button" th:if="${blogs.hasNext()}">Load More</button>
+    <!--<div style="text-align: center">-->
+<!--    <a class="btn btn-primary" th:if="${blogs.hasPrevious()}"-->
+<!--       th:href="@{/blogs(page=${blogs.number - 1})}">Previous</a>-->
+<!--    <span th:text="${blogs.number + 1}"></span> | <span th:text="${blogs.totalPages}"></span>-->
+<!--    <a class="btn btn-primary" th:if="${blogs.hasNext()}"-->
+<!--       th:href="@{/blogs(page=${blogs.number + 1})}">Next</a>-->
+<!--</div>-->
 <footer th:insert="/layout :: footer"></footer>
+<script>
+    function searchBlogs() {
+        event.preventDefault();
+        let title = $("#search").val();
+        $.ajax({
+            url: `http://localhost:8080/api/blogs/search?q=${title}`,
+            type: "GET",
+            success: function (data) {
+                console.log("Data received:", data);
+                let blogs = data.content;
+
+                let content = "";
+                for (let i = 0; i < blogs.length; i++) {
+                    content += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>
+                            <a href="/blogs/${blogs[i].id}/view">${blogs[i].title}</a>
+                        </td>
+                        <td id="content">${blogs[i].content}</td>
+                        <td>${blogs[i].category.name}</td>
+                        <td>
+                            ${blogs[i].publishedDate[2]}/${ blogs[i].publishedDate[1]}/${blogs[i].publishedDate[0]}
+                        </td>
+                        <td><button type="button" class="edit" value="${blogs[i].id}">Edit</button></td>
+                        <td><button type="button" class="delete" value="${blogs[i].id}">Delete</button></td>
+                    </tr>`;
+                }
+                $("#blogs").html(content);
+            }
+        });
+    }
+</script>
 </body>
 </html>

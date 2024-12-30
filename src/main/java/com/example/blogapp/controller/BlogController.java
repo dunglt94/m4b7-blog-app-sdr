@@ -19,6 +19,7 @@ import java.util.Optional;
 
 
 @Controller
+@CrossOrigin("*")
 @RequestMapping("/blogs")
 public class BlogController {
     @Autowired
