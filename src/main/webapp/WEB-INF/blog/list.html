@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div sec:authorize="isAnonymous()">
+    <a th:href="@{/login}">Login</a>
+</div>
+<div sec:authorize="isAuthenticated()">
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<h3>Blog List</h3>
+<div style="margin-block: 8px">
+    <label><input type="search" id="search" name="q" placeholder="Enter blogs title" required></label>
+    <button type="button" onclick="searchBlogs()">Search</button>
+</div>
+<div sec:authorize="isAuthenticated()">
+    <div sec:authorize="hasAnyRole('ADMIN')">
+        <p>
+            <a th:href="@{/categories}">
+                Category List
+            </a>
+        </p>
+    </div>
+</div>
+<div sec:authorize="isAuthenticated()">
+    <p>
+        <a th:href="@{/blogs/create}">
+            Add new blog
+        </a>
+    </p>
+</div>
+<div class="notify">
+    <div th:if="${message}" style="margin-bottom: 5px;">
+        <span th:text="${message}"></span>
+    </div>
+</div>
+<table id="list">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Category</th>
+        <th>Published Date</th>
+        <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="hasAnyRole('ADMIN')">
+                <th>Edit</th>
+                <th>Delete</th>
+            </div>
+        </div>
+
+    </tr>
+    </thead>
+    <tbody id="blogs">
+    <tr th:each="blog, stat:${blogs}" th:class="${stat.odd}?'odd':'even'">
+        <td th:text="${stat.count}"></td>
+        <td>
+            <a th:href="@{/blogs/view/{id}(id=${blog.id})}" th:text="${blog.title}"></a>
+        </td>
+        <td th:text="${blog.content}" id="content"></td>
+        <td th:text="${blog.getCategory().name}"></td>
+        <td th:text="${#temporals.format(blog.publishedDate, 'dd/MM/yyyy')}"></td>
+        <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="hasAnyRole('ADMIN')">
+                <td>
+                    <a th:href="@{/blogs/edit/{id}(id=${blog.id})}">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/blogs/delete/{id}(id=${blog.id})}">Delete</a>
+                </td>
+            </div>
+        </div>
+    </tr>
+    </tbody>
+</table>
+<br>
+<button type="button" th:if="${blogs.hasNext()}" id="load-more" onclick="loadMore()">Load More</button>
+<footer th:insert="/layout :: footer"></footer>
+</body>
+</html>

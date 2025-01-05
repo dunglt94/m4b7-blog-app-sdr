@@ -79,6 +79,6 @@ public class CategoryController {
         }
         Page<Blog> blogs = blogService.findAllByCategory(pageable, category.get());
         model.addAttribute("blogs", blogs);
-        return "blog/index";
+        return "blog/list";
     }
 }

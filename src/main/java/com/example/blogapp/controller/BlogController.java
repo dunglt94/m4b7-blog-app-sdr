@@ -14,7 +14,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -44,7 +43,7 @@ public class BlogController {
             blogs = blogService.findAll(pageable);
         }
         model.addAttribute("blogs", blogs);
-        return "blog/index";
+        return "blog/list";
     }
 
     @GetMapping("/create")
@@ -60,7 +59,7 @@ public class BlogController {
         return "redirect:/blogs";
     }
 
-    @GetMapping("/{id}/view")
+    @GetMapping("/view/{id}")
     public String showDetails(ModelMap model, @PathVariable Long id) {
         Optional<Blog> blog = blogService.findById(id);
         if (blog.isPresent()) {
@@ -71,7 +70,7 @@ public class BlogController {
         }
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/edit/{id}")
     public String showEditForm(ModelMap model, @PathVariable Long id) {
         Optional<Blog> blog = blogService.findById(id);
         if (blog.isPresent()) {
@@ -82,14 +81,14 @@ public class BlogController {
         }
     }
 
-    @PostMapping("/{id}/edit")
+    @PostMapping("/update")
     public String update(Blog blog, RedirectAttributes redirectAttributes) {
         blogService.save(blog);
         redirectAttributes.addFlashAttribute("message", "Blog updated successfully");
         return "redirect:/blogs";
     }
 
-    @GetMapping("/{id}/delete")
+    @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         blogService.delete(id);
         redirectAttributes.addFlashAttribute("message", "Blog deleted successfully");
